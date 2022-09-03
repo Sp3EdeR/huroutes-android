@@ -6,11 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.PackageManagerCompat.LOG_TAG
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import hu.speeder.huroutes.databinding.FragmentWebviewBinding
-
-const val LOG_TAG = "huroutes/webView"
 
 class WebViewFragment : Fragment() {
 
@@ -61,5 +60,9 @@ class WebViewFragment : Fragment() {
         catch (_: Exception) {
         }
         return uri
+    }
+
+    companion object {
+        private const val LOG_TAG = "webViewFragment"
     }
 }
