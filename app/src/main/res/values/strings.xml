@@ -2,4 +2,8 @@
     <string name="app_name">huroutes</string>
     <string name="loading">Betöltés...</string>
     <string name="content">huroutes térkép</string>
+    <string name="dlnoti_channel">Letöltések értesítései</string>
+    <string name="dlnoti_desc">A letöltött fileokról jelenít meg információt.</string>
+    <string name="dlnoti_title">File letöltve</string>
+    <string name="dlnoti_text">Letöltés elkészült \u2022 \"%s\"</string>
 </resources>

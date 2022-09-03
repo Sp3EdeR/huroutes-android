@@ -6,9 +6,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
+import android.webkit.DownloadListener
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.lifecycle.LifecycleCoroutineScope
+import hu.speeder.huroutes.MainActivity
+import hu.speeder.huroutes.web.downloaders.DownloaderPermissionTask
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -38,6 +42,7 @@ class HuroutesWebView @JvmOverloads constructor(
             }
         }
         client.setHandleUriCallback { uri -> handleUri(uri) }
+        setDownloadListener(HuroutesDownloadListener(context))
     }
 
     fun setCoroutineScope(scope: LifecycleCoroutineScope) {
@@ -53,9 +58,12 @@ class HuroutesWebView @JvmOverloads constructor(
 
     
     private fun handleUri(uri: Uri): Boolean {
-        if (uri.host == startUri.host && uri.path?.startsWith(startUri.path!!) == true)
+        if (uri.host == startUri.host && uri.path?.startsWith(startUri.path!!) == true) {
+            Log.d(LOG_TAG, "Loading URL: $uri")
             return false
+        }
 
+        Log.d(LOG_TAG, "Viewing URL with intent: $uri")
         context.startActivity(Intent(Intent.ACTION_VIEW, uri))
 
         return true
@@ -75,4 +83,29 @@ class HuroutesWebView @JvmOverloads constructor(
         super.loadUrl(url, additionalHttpHeaders)
     }
 
+    class HuroutesDownloadListener(private val context: Context): DownloadListener {
+        override fun onDownloadStart(
+            uri: String?, userAgent: String?, contentDisposition: String?,
+            mimeType: String?, contentLength: Long,
+        ) {
+            if (uri == null) {
+                return
+            }
+
+            try {
+                val task = DownloaderPermissionTask(
+                    context, uri, userAgent, contentDisposition, mimeType, contentLength
+                )
+                (context as MainActivity).runTaskWithPermission(task)
+            }
+            catch (e: Exception)
+            {
+                Log.w(LOG_TAG, "Failed to download uri: $uri")
+            }
+        }
+    }
+
+    companion object {
+        private const val LOG_TAG = "webViewClient"
+    }
 }

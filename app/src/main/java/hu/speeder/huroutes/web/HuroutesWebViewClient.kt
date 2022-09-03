@@ -4,7 +4,6 @@ import android.annotation.TargetApi
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -82,15 +81,10 @@ class HuroutesWebViewClient: WebViewClient() {
     }
 
     private fun handleUri(maybeUri: Uri?): Boolean {
-        maybeUri?.also { uri ->
-            Log.d(LOG_TAG, "WebView loading URL: $uri")
-            _handleUriCallback?.also { return it(uri) }
+        if (maybeUri == null || _handleUriCallback == null) {
+            return false
         }
 
-        return false
-    }
-
-    companion object {
-        private const val LOG_TAG = "webViewClient"
+        return _handleUriCallback!!(maybeUri)
     }
 }
