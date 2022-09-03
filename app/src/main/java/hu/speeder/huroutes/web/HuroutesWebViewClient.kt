@@ -1,4 +1,4 @@
-package hu.speeder.huroutes
+package hu.speeder.huroutes.web
 
 import android.graphics.Bitmap
 import android.os.Build
@@ -6,17 +6,16 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.lifecycle.LifecycleCoroutineScope
-import kotlinx.coroutines.launch
 
-class HuroutesWebViewClient(private val coroutineScope: LifecycleCoroutineScope): WebViewClient() {
+class HuroutesWebViewClient: WebViewClient() {
 
     @Volatile
     private var _hasError = false
     val hasError get() = _hasError
 
-    private var _errorCallback: (suspend (WebResourceError?) -> Unit)? = null
-    fun setErrorCallback(callback: suspend (WebResourceError?) -> Unit) {
+    private var _errorCallback: ((WebResourceError?) -> Unit)? = null
+    val hasErrorCallback get() = _errorCallback != null
+    fun setErrorCallback(callback: (WebResourceError?) -> Unit) {
         _errorCallback = callback
     }
 
@@ -39,9 +38,7 @@ class HuroutesWebViewClient(private val coroutineScope: LifecycleCoroutineScope)
 
         _hasError = true
         _errorCallback?.also {
-            coroutineScope.launch {
-                it(error)
-            }
+            it(error)
         }
     }
 

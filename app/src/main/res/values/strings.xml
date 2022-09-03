@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">huroutes</string>
+    <string name="loading">Betöltés...</string>
+    <string name="content">huroutes térkép</string>
 </resources>
