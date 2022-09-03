@@ -2,6 +2,7 @@ package hu.speeder.huroutes.web
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
@@ -36,6 +37,7 @@ class HuroutesWebView @JvmOverloads constructor(
                 forceDark = WebSettings.FORCE_DARK_OFF // Day mode always
             }
         }
+        client.setHandleUriCallback { uri -> handleUri(uri) }
     }
 
     fun setCoroutineScope(scope: LifecycleCoroutineScope) {
@@ -47,6 +49,16 @@ class HuroutesWebView @JvmOverloads constructor(
                 }
             }
         }
+    }
+
+    
+    private fun handleUri(uri: Uri): Boolean {
+        if (uri.host == startUri.host && uri.path?.startsWith(startUri.path!!) == true)
+            return false
+
+        context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+
+        return true
     }
 
     override fun loadUrl(url: String) {
