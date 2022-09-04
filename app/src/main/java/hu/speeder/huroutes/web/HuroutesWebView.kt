@@ -12,6 +12,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.core.content.PackageManagerCompat.LOG_TAG
 import androidx.lifecycle.LifecycleCoroutineScope
+import hu.speeder.huroutes.BuildConfig
 import hu.speeder.huroutes.MainActivity
 import hu.speeder.huroutes.web.downloaders.DownloaderPermissionTask
 import kotlinx.coroutines.delay
@@ -47,6 +48,9 @@ class HuroutesWebView @JvmOverloads constructor(
             if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
                 forceDark = WebSettings.FORCE_DARK_OFF // Day mode always
             }
+            // Customized user-agent string
+            userAgentString = userAgentString.replace(
+                " Mobile", " huroutes/${BuildConfig.VERSION_NAME} Mobile")
         }
         client.setHandleUriCallback { uri -> handleUri(uri) }
         setDownloadListener(HuroutesDownloadListener(context))
