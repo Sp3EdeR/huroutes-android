@@ -7,6 +7,10 @@ import android.util.Log
 import hu.speeder.huroutes.utils.DownloadNotification
 import hu.speeder.huroutes.utils.PermissionTask
 
+/**
+ * A file downloading task that requires permissions.
+ * This task must be executed when the required permissions are granted.
+ */
 class DownloaderPermissionTask(
     private val context: Context,
     uri: String,

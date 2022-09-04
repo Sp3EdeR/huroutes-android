@@ -6,6 +6,9 @@ import android.net.Uri
 import android.provider.MediaStore
 import java.io.OutputStream
 
+/**
+ * An exception which is thrown when a file cannot be written.
+ */
 class CannotWriteFileException(uri: String): Exception("Unable to write file $uri")
 
 /**

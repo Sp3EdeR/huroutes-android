@@ -10,6 +10,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 
+/**
+ * A WebViewClient specialization for the huroutes functionality.
+ */
 class HuroutesWebViewClient: WebViewClient() {
 
     @Volatile

@@ -15,10 +15,13 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
-    private var _onBackPressedCallback: (() -> Boolean)? = null
+    /**
+     * Allows other components to register a handler for `onBackPressed`.
+     */
     fun setOnBackPressedCallback(callback: (() -> Boolean)?) {
         _onBackPressedCallback = callback
     }
+    private var _onBackPressedCallback: (() -> Boolean)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +37,24 @@ class MainActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
+    /**
+     * Stores a map from a permission-list identifier to an ID within `requestTasks`.
+     *
+     * This helps avoiding requesting the same permission set twice at the same time.
+     */
     private var permissionRequests: MutableMap<String, Int> = mutableMapOf()
+
+    /**
+     * A container of tasks awaiting permissions to run, organized by the requestCodes.
+     */
     private val requestTasks: MutableMap<Int, MutableList<PermissionTask>> = mutableMapOf()
 
+    /**
+     * Requests the needed permissions from the user.
+     *
+     * The permission tasks are stored while awaiting for the permissions.
+     * The `onRequestPermissionsResult` callback handles the results for this request.
+     */
     fun runTaskWithPermission(task: PermissionTask) {
         val permissions = task.permissionsNeeded.sortedArray()
         val neededPermissions = stillNeeded(this, permissions).sortedArray()
@@ -56,6 +74,12 @@ class MainActivity : AppCompatActivity() {
         task.launch(lifecycleScope)
     }
 
+    /**
+     * Processes the system response for permission requests.
+     *
+     * When permissions are granted, executes the tasks awaiting the permissions.
+     * Otherwise it only does cleanup.
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -72,6 +96,9 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    /**
+     * Returns a unique request code for permission requests.
+     */
     private fun getUniqueTaskCode(): Int {
         val range = (0..Int.MAX_VALUE)
         var value = range.random()
