@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">huroutes</string>
+    <string name="app_name" translatable="false">huroutes</string>
     <string name="loading">Betöltés...</string>
     <string name="content">huroutes térkép</string>
     <string name="dlnoti_channel">Letöltések értesítései</string>
