@@ -10,14 +10,21 @@ import android.util.Log
 import android.webkit.DownloadListener
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.core.content.PackageManagerCompat.LOG_TAG
 import androidx.lifecycle.LifecycleCoroutineScope
 import hu.speeder.huroutes.MainActivity
 import hu.speeder.huroutes.web.downloaders.DownloaderPermissionTask
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * The huroutes website root URI
+ */
 const val SITE_URI = "https://sp3eder.github.io/huroutes/"
 
+/**
+ * A customized WebView that contains huroutes specializations.
+ */
 @SuppressLint("SetJavaScriptEnabled")
 class HuroutesWebView @JvmOverloads constructor(
     context: Context,
@@ -45,6 +52,10 @@ class HuroutesWebView @JvmOverloads constructor(
         setDownloadListener(HuroutesDownloadListener(context))
     }
 
+    /**
+     * When called with a coroutine scope, it adds the ability to automatically refresh the page on
+     * a load error.
+     */
     fun setCoroutineScope(scope: LifecycleCoroutineScope) {
         client.setErrorCallback {
             scope.launch {
@@ -56,7 +67,9 @@ class HuroutesWebView @JvmOverloads constructor(
         }
     }
 
-    
+    /**
+     * Opens some URIs with external viewers, instead of this WebView.
+     */
     private fun handleUri(uri: Uri): Boolean {
         if (uri.host == startUri.host && uri.path?.startsWith(startUri.path!!) == true) {
             Log.d(LOG_TAG, "Loading URL: $uri")
@@ -83,6 +96,10 @@ class HuroutesWebView @JvmOverloads constructor(
         super.loadUrl(url, additionalHttpHeaders)
     }
 
+    /**
+     * A download listener for the HuroutesWebView.
+     * This implements custom file downloading for huroutes.
+     */
     class HuroutesDownloadListener(private val context: Context): DownloadListener {
         override fun onDownloadStart(
             uri: String?, userAgent: String?, contentDisposition: String?,

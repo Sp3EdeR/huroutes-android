@@ -10,6 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import hu.speeder.huroutes.databinding.FragmentWebviewBinding
 
+/**
+ * A fragment that contains the main WebView control.
+ */
 class WebViewFragment : Fragment() {
 
     private var _binding: FragmentWebviewBinding? = null
@@ -46,6 +49,11 @@ class WebViewFragment : Fragment() {
         super.onDestroyView()
     }
 
+    /**
+     * Returns the initial URI to be loaded in the WebView.
+     *
+     * The URI can be received from an intent used to launch the app.
+     */
     private fun getStartUri(): Uri {
         var uri = binding.webView.startUri
         try {
