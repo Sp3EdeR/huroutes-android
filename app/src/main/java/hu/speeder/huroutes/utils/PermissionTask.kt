@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 interface PermissionTask {
     val permissionsNeeded: Array<String>
     fun run()
+    fun error()
 }
 
 /**
@@ -17,4 +18,11 @@ interface PermissionTask {
  */
 fun PermissionTask.launch(scope: LifecycleCoroutineScope) {
     scope.launch(Dispatchers.IO) { run() }
+}
+
+/**
+ * Launches the task's error handler asynchronously on the I/O dispatcher.
+ */
+fun PermissionTask.launchError(scope: LifecycleCoroutineScope) {
+    scope.launch(Dispatchers.IO) { error() }
 }
