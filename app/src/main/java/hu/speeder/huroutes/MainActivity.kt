@@ -9,6 +9,7 @@ import hu.speeder.huroutes.utils.PermissionTask
 import hu.speeder.huroutes.utils.Permissions
 import hu.speeder.huroutes.utils.Permissions.Companion.stillNeeded
 import hu.speeder.huroutes.utils.launch
+import hu.speeder.huroutes.utils.launchError
 
 class MainActivity : AppCompatActivity() {
 
@@ -90,6 +91,10 @@ class MainActivity : AppCompatActivity() {
         if (grantResults.all { it == PERMISSION_GRANTED }) {
             for (task in tasks) {
                 task.launch(lifecycleScope)
+            }
+        } else {
+            for (task in tasks) {
+                task.launchError(lifecycleScope)
             }
         }
 

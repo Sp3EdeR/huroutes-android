@@ -10,7 +10,6 @@ import android.util.Log
 import android.webkit.DownloadListener
 import android.webkit.WebSettings
 import android.webkit.WebView
-import androidx.core.content.PackageManagerCompat.LOG_TAG
 import androidx.lifecycle.LifecycleCoroutineScope
 import hu.speeder.huroutes.BuildConfig
 import hu.speeder.huroutes.MainActivity
@@ -40,6 +39,7 @@ class HuroutesWebView @JvmOverloads constructor(
 
     init {
         webViewClient = client
+        webChromeClient = HuroutesWebChromeClient(context)
         settings.apply {
             domStorageEnabled = true // localStorage
             displayZoomControls = false // No zoom controls (only pinch)
@@ -51,6 +51,7 @@ class HuroutesWebView @JvmOverloads constructor(
             // Customized user-agent string
             userAgentString = userAgentString.replace(
                 " Mobile", " huroutes/${BuildConfig.VERSION_NAME} Mobile")
+            setGeolocationEnabled(true)
         }
         client.setHandleUriCallback { uri -> handleUri(uri) }
         setDownloadListener(HuroutesDownloadListener(context))

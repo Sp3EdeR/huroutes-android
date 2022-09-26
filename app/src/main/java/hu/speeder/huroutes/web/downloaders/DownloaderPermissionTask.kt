@@ -35,6 +35,8 @@ class DownloaderPermissionTask(
         }
     }
 
+    override fun error() {}
+
     companion object {
         private const val LOG_TAG = "webViewClient"
     }
