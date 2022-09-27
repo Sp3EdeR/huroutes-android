@@ -21,11 +21,11 @@ class HuroutesWebChromeClient(val context: Context): WebChromeClient() {
         override val permissionsNeeded: Array<String> = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
         override fun run() {
-            callback?.invoke(origin, true, true)
+            callback?.invoke(origin, true, false)
         }
 
         override fun error() {
-            callback?.invoke(origin, false, true)
+            callback?.invoke(origin, false, false)
         }
     }
 
