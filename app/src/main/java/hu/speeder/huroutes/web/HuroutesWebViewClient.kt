@@ -1,13 +1,13 @@
 package hu.speeder.huroutes.web
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.net.Uri
+import android.net.http.SslError
 import android.os.Build
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import androidx.annotation.RequiresApi
 
 /**
@@ -80,6 +80,15 @@ class HuroutesWebViewClient: WebViewClient() {
 
         _loadedCallback?.also {
             it()
+        }
+    }
+
+    @SuppressLint("WebViewClientOnReceivedSslError")
+    override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
+        if (view.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
+            handler.proceed()
+        } else {
+            handler.cancel()
         }
     }
 

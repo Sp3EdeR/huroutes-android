@@ -3,6 +3,7 @@ package hu.speeder.huroutes.web
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
@@ -59,6 +60,11 @@ class HuroutesWebView @JvmOverloads constructor(
         client.setHandleUriCallback { uri -> handleUri(uri) }
         setDownloadListener(HuroutesDownloadListener(context))
         initDarkMode()
+
+        // Setup debugging; See https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews for reference
+        if (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
+            setWebContentsDebuggingEnabled(true)
+        }
     }
 
     @Suppress("DEPRECATION")
