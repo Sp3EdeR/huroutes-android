@@ -30,7 +30,7 @@ class HuroutesWebChromeClient(val context: Context): WebChromeClient() {
     }
 
     /**
-     * The webview calls this function when the location is requested.
+     * The WebView calls this function when the location is requested.
      */
     override fun onGeolocationPermissionsShowPrompt(
         origin: String?,

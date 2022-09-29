@@ -3,6 +3,7 @@ package hu.speeder.huroutes.web
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
@@ -11,6 +12,8 @@ import android.webkit.DownloadListener
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewFeature
 import hu.speeder.huroutes.BuildConfig
 import hu.speeder.huroutes.MainActivity
 import hu.speeder.huroutes.web.downloaders.DownloaderPermissionTask
@@ -55,6 +58,23 @@ class HuroutesWebView @JvmOverloads constructor(
         }
         client.setHandleUriCallback { uri -> handleUri(uri) }
         setDownloadListener(HuroutesDownloadListener(context))
+        initDarkMode()
+    }
+
+    @Suppress("DEPRECATION")
+    fun initDarkMode() {
+        val nightModeFlag = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (nightModeFlag == Configuration.UI_MODE_NIGHT_YES) {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+                WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_ON)
+            }
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
+                WebSettingsCompat.setForceDarkStrategy(
+                    settings,
+                    WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY
+                )
+            }
+        }
     }
 
     /**
