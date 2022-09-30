@@ -1,10 +1,12 @@
 package hu.speeder.huroutes.web
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.res.Configuration
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
@@ -59,6 +61,7 @@ class HuroutesWebView @JvmOverloads constructor(
         }
         client.setHandleUriCallback { uri -> handleUri(uri) }
         setDownloadListener(HuroutesDownloadListener(context))
+        initOfflineMode()
         initDarkMode()
 
         // Setup debugging; See https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews for reference
@@ -68,7 +71,7 @@ class HuroutesWebView @JvmOverloads constructor(
     }
 
     @Suppress("DEPRECATION")
-    fun initDarkMode() {
+    private fun initDarkMode() {
         val nightModeFlag = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         if (nightModeFlag == Configuration.UI_MODE_NIGHT_YES) {
             if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
@@ -80,6 +83,16 @@ class HuroutesWebView @JvmOverloads constructor(
                     WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY
                 )
             }
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun initOfflineMode() {
+        val cm = context.getSystemService(Activity.CONNECTIVITY_SERVICE) as ConnectivityManager?
+        if (cm?.activeNetworkInfo?.isConnected == true) {
+            settings.cacheMode = WebSettings.LOAD_DEFAULT
+        } else {
+            settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         }
     }
 
