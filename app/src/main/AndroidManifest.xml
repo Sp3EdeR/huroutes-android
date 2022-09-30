@@ -4,6 +4,9 @@
     package="hu.speeder.huroutes">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- for offline mode -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- for route downloads -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- for the location marker -->
