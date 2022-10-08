@@ -1,16 +1,17 @@
 package hu.speeder.huroutes.web
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.res.Configuration
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.webkit.DownloadListener
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -43,6 +44,9 @@ class HuroutesWebView @JvmOverloads constructor(
     val client = HuroutesWebViewClient()
     val startUri: Uri = Uri.parse(SITE_URI)
 
+    class Scrollable { var x = true; var y = true }
+    val scrollable = Scrollable()
+
     init {
         webViewClient = client
         webChromeClient = HuroutesWebChromeClient(context)
@@ -61,7 +65,7 @@ class HuroutesWebView @JvmOverloads constructor(
         }
         client.setHandleUriCallback { uri -> handleUri(uri) }
         setDownloadListener(HuroutesDownloadListener(context))
-        initOfflineMode()
+        updateOfflineMode()
         initDarkMode()
 
         // Setup debugging; See https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews for reference
@@ -87,9 +91,42 @@ class HuroutesWebView @JvmOverloads constructor(
     }
 
     @Suppress("DEPRECATION")
-    private fun initOfflineMode() {
-        val cm = context.getSystemService(Activity.CONNECTIVITY_SERVICE) as ConnectivityManager?
-        if (cm?.activeNetworkInfo?.isConnected == true) {
+    fun isNetworkAvailable(): Boolean {
+        var result = false
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val actNw =
+                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            result = when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            connectivityManager.run {
+                connectivityManager.activeNetworkInfo?.run {
+                    result = when (type) {
+                        ConnectivityManager.TYPE_WIFI -> true
+                        ConnectivityManager.TYPE_MOBILE -> true
+                        ConnectivityManager.TYPE_ETHERNET -> true
+                        else -> false
+                    }
+
+                }
+            }
+        }
+
+        return result
+    }
+
+    /**
+     * @return Whether the webView is in offline mode
+     */
+    fun updateOfflineMode() {
+        if (isNetworkAvailable()) {
             settings.cacheMode = WebSettings.LOAD_DEFAULT
         } else {
             settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
@@ -138,6 +175,24 @@ class HuroutesWebView @JvmOverloads constructor(
             throw UninitializedException()
 
         super.loadUrl(url, additionalHttpHeaders)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        val ret = super.onTouchEvent(event)
+
+        if (event?.actionMasked == MotionEvent.ACTION_DOWN) {
+            scrollable.x = true; scrollable.y = true
+        }
+
+        return ret
+    }
+
+    override fun onOverScrolled(scrollX: Int, scrollY: Int, clampedX: Boolean, clampedY: Boolean) {
+        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY)
+
+        scrollable.x = !clampedX
+        scrollable.y = !clampedY
     }
 
     /**

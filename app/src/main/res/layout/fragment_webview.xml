@@ -6,26 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".WebViewFragment">
 
-    <hu.speeder.huroutes.web.HuroutesWebView
-        android:id="@+id/web_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/content"
+    <hu.speeder.huroutes.HuroutesSwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/hourglassView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/loading"
-        android:scaleType="centerInside"
-        android:src="@drawable/loading_animation"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <hu.speeder.huroutes.web.HuroutesWebView
+            android:id="@+id/web_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/content" />
+    </hu.speeder.huroutes.HuroutesSwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
