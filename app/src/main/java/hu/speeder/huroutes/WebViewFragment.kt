@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebSettings
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import hu.speeder.huroutes.databinding.FragmentWebviewBinding
@@ -31,7 +32,8 @@ class WebViewFragment : Fragment() {
 
         binding.webView.apply {
             client.setLoadedCallback {
-                binding.hourglassView.visibility = View.GONE
+                binding.swipeRefresh.isRefreshing = false
+                updateOfflineMode() // Re-enable cache after a refresh
             }
 
             setCoroutineScope(lifecycleScope)
@@ -40,6 +42,20 @@ class WebViewFragment : Fragment() {
             (activity as? MainActivity)?.setOnBackPressedCallback {
                 canGoBack() && goBack() == Unit
             }
+        }
+
+        binding.swipeRefresh.apply {
+            setCanChildScrollUpCallback {
+                binding.webView.scrollable.y || !binding.webView.isNetworkAvailable()
+            }
+            setOnRefreshListener {
+                binding.webView.also { vw ->
+                    vw.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+                    vw.reload()
+                    isRefreshing = true
+                }
+            }
+            isRefreshing = true
         }
     }
 
