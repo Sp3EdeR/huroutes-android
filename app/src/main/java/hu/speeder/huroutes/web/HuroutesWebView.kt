@@ -56,9 +56,6 @@ class HuroutesWebView @JvmOverloads constructor(
             displayZoomControls = false // No zoom controls (only pinch)
             javaScriptEnabled = true // Javascript
             javaScriptCanOpenWindowsAutomatically = true // window.open
-            if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
-                forceDark = WebSettings.FORCE_DARK_OFF // Day mode always
-            }
             // Customized user-agent string
             userAgentString = userAgentString.replace(
                 " Mobile", " huroutes/${BuildConfig.VERSION_NAME} Mobile")
@@ -78,6 +75,10 @@ class HuroutesWebView @JvmOverloads constructor(
 
     @Suppress("DEPRECATION")
     private fun initDarkMode() {
+        if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
+            settings.forceDark = WebSettings.FORCE_DARK_OFF // Day mode always
+        }
+
         val nightModeFlag = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         if (nightModeFlag == Configuration.UI_MODE_NIGHT_YES) {
             if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
