@@ -21,6 +21,7 @@ import androidx.webkit.WebViewFeature
 import hu.speeder.huroutes.BuildConfig
 import hu.speeder.huroutes.MainActivity
 import hu.speeder.huroutes.web.downloaders.DownloaderPermissionTask
+import hu.speeder.huroutes.web.interop.JavaScriptSharedInterface
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -67,6 +68,7 @@ class HuroutesWebView @JvmOverloads constructor(
         setDownloadListener(HuroutesDownloadListener(context))
         updateOfflineMode()
         initDarkMode()
+        addShareInterface()
 
         // Setup debugging; See https://developers.google.com/web/tools/chrome-devtools/remote-debugging/webviews for reference
         if (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
@@ -131,6 +133,13 @@ class HuroutesWebView @JvmOverloads constructor(
         } else {
             settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         }
+    }
+
+	/**
+	 * Adds a Javascript->Kotlin interface for exporting android features.
+	 */
+    private fun addShareInterface() {
+        addJavascriptInterface(JavaScriptSharedInterface(context), "android");
     }
 
     /**
