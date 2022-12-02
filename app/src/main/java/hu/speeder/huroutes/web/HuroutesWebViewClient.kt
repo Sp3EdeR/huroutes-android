@@ -83,6 +83,14 @@ class HuroutesWebViewClient: WebViewClient() {
         }
     }
 
+    override fun onPageFinished(view: WebView?, url: String?) {
+        super.onPageFinished(view, url)
+
+        // Inject custom Javascript:
+        // This code implements the WebShare API for URLs.
+        view?.loadUrl("javascript:navigator.share=shData=>android.share(JSON.stringify(shData));")
+    }
+
     @SuppressLint("WebViewClientOnReceivedSslError")
     override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
         if (view.context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
