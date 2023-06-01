@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         _onBackPressedCallback?.also {
             if (it()) return
