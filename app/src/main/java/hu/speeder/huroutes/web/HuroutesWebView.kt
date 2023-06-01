@@ -28,7 +28,11 @@ import kotlinx.coroutines.launch
 /**
  * The huroutes website root URI
  */
-const val SITE_URI = "https://sp3eder.github.io/huroutes/"
+const val SITE_LANGUAGE = "hu"
+const val SITE_URI = "https://sp3eder.github.io/huroutes"
+const val SITE_TRANSLATE_URI = "https://sp3eder-github-io.translate.goog/huroutes"
+const val GOOGLE_TRANSLATE_LINK_BASE = "https://translate.google.com/translate"
+const val SITE_TRANSLATE_TEMPLATE = "${GOOGLE_TRANSLATE_LINK_BASE}?sl=${SITE_LANGUAGE}&tl=%s&u=${SITE_URI}"
 
 /**
  * A customized WebView that contains huroutes specializations.
@@ -161,6 +165,20 @@ class HuroutesWebView @JvmOverloads constructor(
                 }
             }
         }
+    }
+
+    /**
+     * Tests whether the given URI is a valid huroutes URL.
+     */
+    fun validateUri(uri: Uri): Boolean {
+        val uris = arrayOf(SITE_URI, SITE_TRANSLATE_URI, GOOGLE_TRANSLATE_LINK_BASE)
+        for (u in uris) {
+            val testUri = Uri.parse(u)
+            if (testUri.host == uri.host && uri.path?.startsWith(testUri.path!!) == true) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

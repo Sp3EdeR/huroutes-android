@@ -75,7 +75,7 @@ class WebViewFragment : Fragment() {
         try {
             val inUri = Uri.parse(requireActivity().intent!!.data!!.toString())
             Log.d(LOG_TAG, "Received URI in intent: $inUri")
-            if (inUri.host == uri.host && inUri.path?.startsWith(uri.path!!) == true) {
+            if (binding.webView.validateUri(inUri)) {
                 uri = inUri
                 Log.i(LOG_TAG, "Accepted URI in intent: $uri")
             }

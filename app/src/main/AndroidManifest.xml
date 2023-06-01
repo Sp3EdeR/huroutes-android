@@ -37,6 +37,7 @@
                 <data android:scheme="http"/>
                 <data android:scheme="https"/>
                 <data android:host="sp3eder.github.io" android:pathPrefix="/huroutes" />
+                <data android:host="sp3eder-github-io.translate.goog" android:pathPrefix="/huroutes" />
             </intent-filter>
         </activity>
     </application>
