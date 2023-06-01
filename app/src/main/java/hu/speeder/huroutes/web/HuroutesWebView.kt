@@ -150,9 +150,14 @@ class HuroutesWebView @JvmOverloads constructor(
     fun setCoroutineScope(scope: LifecycleCoroutineScope) {
         client.setErrorCallback {
             scope.launch {
-                delay(5000)
                 if (client.hasError) {
-                    reload()
+                    if (settings.cacheMode == WebSettings.LOAD_DEFAULT) {
+                        settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+                        reload()
+                    } else {
+                        delay(5000)
+                        reload()
+                    }
                 }
             }
         }
