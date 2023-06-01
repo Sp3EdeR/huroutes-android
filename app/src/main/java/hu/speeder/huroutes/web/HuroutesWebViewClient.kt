@@ -88,7 +88,10 @@ class HuroutesWebViewClient: WebViewClient() {
 
         // Inject custom Javascript:
         // This code implements the WebShare API for URLs.
-        view?.loadUrl("javascript:navigator.share=shData=>android.share(JSON.stringify(shData));")
+        view?.loadUrl(
+            "javascript:" +
+            "navigator.share=shData=>android.share(JSON.stringify(shData));" +
+            "android.setLang(huroutes.opt.l10n.providers.Google.getCurrentLang());")
     }
 
     @SuppressLint("WebViewClientOnReceivedSslError")

@@ -4,17 +4,22 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
+import hu.speeder.huroutes.data.PreferencesStore
 import hu.speeder.huroutes.databinding.ActivityMainBinding
 import hu.speeder.huroutes.utils.PermissionTask
 import hu.speeder.huroutes.utils.Permissions
 import hu.speeder.huroutes.utils.Permissions.Companion.stillNeeded
 import hu.speeder.huroutes.utils.launch
 import hu.speeder.huroutes.utils.launchError
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var _preferencesStore: PreferencesStore
+    val preferencesStore get() = _preferencesStore
 
     /**
      * Allows other components to register a handler for `onBackPressed`.
@@ -28,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        _preferencesStore = PreferencesStore(this)
     }
 
     @Deprecated("Deprecated in Java")
@@ -100,6 +106,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    fun onLanguageUpdated(language: String?) {
+        lifecycleScope.launch {
+            preferencesStore.saveLanguageToPreferencesStore(language)
+        }
     }
 
     /**

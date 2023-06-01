@@ -47,7 +47,15 @@ class HuroutesWebView @JvmOverloads constructor(
     class UninitializedException: Exception("HuroutesWebView requires setCoroutineScope to be called before loadUrl")
 
     val client = HuroutesWebViewClient()
-    val startUri: Uri = Uri.parse(SITE_URI)
+    private var _startLanguage: String? = null
+    val startUri: Uri get() {
+        if (_startLanguage == null) {
+            _startLanguage = (context as MainActivity).preferencesStore.languageIso2 ?:
+                SITE_LANGUAGE
+        }
+        return Uri.parse(if (_startLanguage!! == SITE_LANGUAGE) SITE_URI else
+            SITE_TRANSLATE_TEMPLATE.format(_startLanguage))
+    }
 
     class Scrollable { var x = true; var y = true }
     val scrollable = Scrollable()
@@ -185,7 +193,7 @@ class HuroutesWebView @JvmOverloads constructor(
      * Opens some URIs with external viewers, instead of this WebView.
      */
     private fun handleUri(uri: Uri): Boolean {
-        if (uri.host == startUri.host && uri.path?.startsWith(startUri.path!!) == true) {
+        if (validateUri(uri)) {
             Log.d(LOG_TAG, "Loading URL: $uri")
             return false
         }

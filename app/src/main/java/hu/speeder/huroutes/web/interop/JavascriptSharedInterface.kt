@@ -6,6 +6,7 @@ import android.webkit.JavascriptInterface
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import hu.speeder.huroutes.MainActivity
 
 class ShareData(
     val title: String?,
@@ -33,6 +34,15 @@ class JavaScriptSharedInterface(
             putExtra(Intent.EXTRA_TEXT, text)
         }
         context.startActivity(Intent.createChooser(intent, data.title))
+    }
+
+    @JavascriptInterface
+    fun setLang(lang: String) {
+        var language: String? = null
+        if (lang != "undefined") {
+            language = lang
+        }
+        (context as MainActivity).onLanguageUpdated(language)
     }
 
     companion object {
