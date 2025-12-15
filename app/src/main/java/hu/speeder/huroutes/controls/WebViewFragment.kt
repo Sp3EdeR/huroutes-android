@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.widget.FrameLayout
+import androidx.core.content.PackageManagerCompat.LOG_TAG
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import hu.speeder.huroutes.MainActivity
@@ -55,10 +56,6 @@ open abstract class WebViewFragment() : Fragment() {
 
             setCoroutineScope(lifecycleScope)
             loadUrl(getStartUri().toString())
-
-            (activity as? MainActivity)?.setOnBackPressedCallback {
-                canGoBack() && goBack() == Unit
-            }
         }
 
         binding.swipeRefresh.apply {
@@ -78,7 +75,6 @@ open abstract class WebViewFragment() : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
-        (activity as? MainActivity)?.setOnBackPressedCallback(null)
         super.onDestroyView()
     }
 
@@ -103,6 +99,13 @@ open abstract class WebViewFragment() : Fragment() {
         catch (_: Exception) {
         }
         return uri
+    }
+
+    /**
+     * Handles the back button press in the WebView.
+     */
+    fun onBackPressed(): Boolean {
+        return webView.canGoBack() && webView.goBack() == Unit
     }
 
     protected abstract fun makeWebView(ctx: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0): CarappsWebView

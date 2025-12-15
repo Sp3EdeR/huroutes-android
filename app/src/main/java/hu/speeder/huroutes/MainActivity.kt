@@ -4,6 +4,7 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Resources
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import hu.speeder.huroutes.controls.EventsWebViewFragment
 import hu.speeder.huroutes.controls.HuroutesWebViewFragment
 import hu.speeder.huroutes.controls.PhotospotsWebViewFragment
 import hu.speeder.huroutes.controls.ViewPagerAdapter
+import hu.speeder.huroutes.controls.WebViewFragment
 import hu.speeder.huroutes.data.PreferencesStore
 import hu.speeder.huroutes.databinding.ActivityMainBinding
 import hu.speeder.huroutes.utils.PermissionTask
@@ -50,15 +52,11 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var _preferencesStore: PreferencesStore
     val preferencesStore get() = _preferencesStore
+    private lateinit var backPressedCallback: OnBackPressedCallback
 
     /**
      * When the main activity is created, initialize the controls and bindings.
      */
-    fun setOnBackPressedCallback(callback: (() -> Boolean)?) {
-        _onBackPressedCallback = callback
-    }
-    private var _onBackPressedCallback: (() -> Boolean)? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
@@ -78,6 +76,22 @@ class MainActivity : AppCompatActivity() {
         // Get the last tab position from the preferences store
         val tabPosition = preferencesStore.lastTabPosition ?: 1
         binding.viewPager.setCurrentItem(tabPosition.coerceIn(0, TAB_DATA.size - 1), false)
+
+        // Handle the back button in the current view
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val activeFragment = supportFragmentManager.findFragmentByTag(
+                    "f${binding.viewPager.currentItem}"
+                ) as? WebViewFragment
+                if (activeFragment?.onBackPressed() != true) {
+                    // Repeat the back press action with this callback disabled
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                    isEnabled = true
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, backPressedCallback)
     }
 
     /**
@@ -229,16 +243,6 @@ class MainActivity : AppCompatActivity() {
             shadowCompatibilityMode = MaterialShapeDrawable.SHADOW_COMPAT_MODE_NEVER
         }
         binding.navigationRail.background = railBackground
-    }
-
-    // TODO: Handle back press in active webview
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        _onBackPressedCallback?.also {
-            if (it()) return
-        }
-
-        super.onBackPressed()
     }
 
     /**
