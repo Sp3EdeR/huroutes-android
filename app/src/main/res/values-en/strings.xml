@@ -1,6 +1,5 @@
 <resources>
-    <string name="loading">Loading...</string>
-    <string name="content">huroutes map</string>
+    <string name="app_name">Car Apps</string>
     <string name="dlnoti_channel">Download notifications</string>
     <string name="dlnoti_desc">It shows information about downloaded files.</string>
     <string name="dlnoti_title">File downloaded</string>

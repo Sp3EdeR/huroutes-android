@@ -1,4 +1,4 @@
-# huroutes
-<center>Magyar utak vezetésre</center>
+# Autós Appok - Android
+Alkamazások a magyar autós közösségnek
 
-Ez a repo tartalmazza a [huroutes](https://sp3eder.github.io/huroutes) weblaphoz tartozó Android applikáció forrását és releaseit.
+Ez a repo tartalmazza az [autós appok](https://sp3eder.github.io/) alatt található különböző tartozó Android applikáció forrását és releaseit.
