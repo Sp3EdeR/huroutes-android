@@ -93,6 +93,7 @@ open abstract class WebViewFragment() : Fragment() {
             inUri = webView.validateUri(inUri)
             if (inUri != null) {
                 uri = inUri
+                (activity as? MainActivity)?.activatePage(this)
                 Log.i(LOG_TAG, "Accepted URI in intent: $inUri")
             }
         }

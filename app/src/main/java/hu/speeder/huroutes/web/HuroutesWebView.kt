@@ -28,7 +28,7 @@ class HuroutesWebView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ): CarappsWebView(
-    "https://sp3eder.github.io/huroutes/".toUri(),
+    "https://sp3eder.github.io/huroutes".toUri(),
     context, attrs, defStyleAttr) {
 
     private val _client = HuroutesWebViewClient()
@@ -62,7 +62,7 @@ class HuroutesWebView @JvmOverloads constructor(
         )
         for (u in uris) {
             if (u.host == uri.host && uri.path?.startsWith(u.path!!) == true) {
-                return u
+                return uri
             }
         }
         return null

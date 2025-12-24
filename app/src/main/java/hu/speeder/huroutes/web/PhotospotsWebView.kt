@@ -7,8 +7,8 @@ import android.util.AttributeSet
 import androidx.core.net.toUri
 import kotlin.text.Regex.Companion.escape
 
-private const val PHOTOSPOTS_SITE_URI = "https://sp3eder.github.io/autofoto/"
-private const val PHOTOSPOTS_START_URI =  "${PHOTOSPOTS_SITE_URI}/fullscreen/"
+private const val PHOTOSPOTS_SITE_URI = "https://sp3eder.github.io/autofoto"
+private const val PHOTOSPOTS_START_URI =  "${PHOTOSPOTS_SITE_URI}/fullscreen"
 private const val GOOGLE_MAPS_EMBED_LINK_BASE = "https://www.google.com/maps/d/embed"
 
 /**

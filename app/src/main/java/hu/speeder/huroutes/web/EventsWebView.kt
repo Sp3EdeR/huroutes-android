@@ -16,7 +16,7 @@ class EventsWebView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ): CarappsWebView(
-    "https://sp3eder.github.io/autosesemenyek/".toUri(),
+    "https://sp3eder.github.io/autosesemenyek".toUri(),
     context, attrs, defStyleAttr) {
 
     private val _client = EventsWebViewClient()

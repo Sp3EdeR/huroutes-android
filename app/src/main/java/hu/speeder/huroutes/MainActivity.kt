@@ -232,6 +232,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun activatePage(fragment: WebViewFragment, smoothScroll: Boolean = false) {
+        var position = -1
+        for (i in 0 until TAB_DATA.size) {
+            if (fragment === supportFragmentManager.findFragmentByTag("f$i")) {
+                position = i
+                break
+            }
+        }
+        if (position == -1)
+            return
+        binding.viewPager.post {
+            if (!isFinishing && !isDestroyed) {
+                binding.viewPager.setCurrentItem(position, smoothScroll)
+            }
+        }
+    }
+
     /**
       * Applies the background color to the navigation rail to match the tab layout.
       */
