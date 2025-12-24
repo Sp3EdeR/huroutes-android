@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.widget.FrameLayout
-import androidx.core.content.PackageManagerCompat.LOG_TAG
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import hu.speeder.huroutes.MainActivity

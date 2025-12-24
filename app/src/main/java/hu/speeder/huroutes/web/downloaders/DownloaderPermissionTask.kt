@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import hu.speeder.huroutes.MainActivity
-import hu.speeder.huroutes.web.downloaders.DownloadNotificationPermissionTask
 import hu.speeder.huroutes.utils.PermissionTask
 
 /**

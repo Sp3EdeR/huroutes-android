@@ -2,10 +2,8 @@ package hu.speeder.huroutes.web
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.Uri
 import android.util.AttributeSet
 import androidx.core.net.toUri
-import hu.speeder.huroutes.web.HuroutesWebView.HuroutesDownloadListener
 
 /**
  * A customized WebView that contains specializations for the events page.

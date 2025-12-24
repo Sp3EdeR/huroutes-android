@@ -1,14 +1,16 @@
 package hu.speeder.huroutes.web
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.net.Uri
 import android.net.http.SslError
 import android.os.Build
-import android.webkit.*
-import androidx.annotation.RequiresApi
+import android.webkit.SslErrorHandler
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 
 /**
  * A WebViewClient specialization for the huroutes functionality.

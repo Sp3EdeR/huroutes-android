@@ -4,11 +4,11 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Resources
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -28,9 +28,6 @@ import hu.speeder.huroutes.utils.Permissions.Companion.stillNeeded
 import hu.speeder.huroutes.utils.TabData
 import hu.speeder.huroutes.utils.launch
 import hu.speeder.huroutes.utils.launchError
-import hu.speeder.huroutes.web.EventsWebView
-import hu.speeder.huroutes.web.HuroutesWebView
-import hu.speeder.huroutes.web.PhotospotsWebView
 import kotlinx.coroutines.launch
 
 // Define tab data with URLs and navigation rail menu IDs

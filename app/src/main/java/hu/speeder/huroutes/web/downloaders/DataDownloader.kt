@@ -7,7 +7,8 @@ import android.util.Base64
 import android.webkit.MimeTypeMap
 import java.net.URLDecoder
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * Regex for the media type format used by `data` URIs.

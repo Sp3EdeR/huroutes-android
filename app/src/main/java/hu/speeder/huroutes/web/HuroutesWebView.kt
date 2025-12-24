@@ -6,9 +6,8 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
 import android.webkit.DownloadListener
-import android.webkit.WebView
-import hu.speeder.huroutes.MainActivity
 import androidx.core.net.toUri
+import hu.speeder.huroutes.MainActivity
 import hu.speeder.huroutes.web.downloaders.DownloaderPermissionTask
 
 /**

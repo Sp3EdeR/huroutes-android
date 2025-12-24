@@ -2,7 +2,6 @@ package hu.speeder.huroutes.web
 
 import android.graphics.Bitmap
 import android.webkit.WebView
-import android.webkit.WebViewClient
 
 class EventsWebViewClient: CarappsWebViewClient() {
     override fun onPageStarted(

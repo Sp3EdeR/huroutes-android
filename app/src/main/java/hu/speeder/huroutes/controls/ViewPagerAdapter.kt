@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import hu.speeder.huroutes.utils.TabDataList
-import hu.speeder.huroutes.controls.WebViewFragment
-import hu.speeder.huroutes.web.HuroutesWebView
 
 class ViewPagerAdapter constructor(
     owner: AppCompatActivity,

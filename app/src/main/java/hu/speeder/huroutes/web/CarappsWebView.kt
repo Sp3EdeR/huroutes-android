@@ -12,15 +12,12 @@ import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
-import android.webkit.DownloadListener
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import hu.speeder.huroutes.BuildConfig
-import hu.speeder.huroutes.MainActivity
-import hu.speeder.huroutes.web.downloaders.DownloaderPermissionTask
 import hu.speeder.huroutes.web.interop.JavaScriptSharedInterface
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
