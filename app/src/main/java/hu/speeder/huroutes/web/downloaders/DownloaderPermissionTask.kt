@@ -4,7 +4,8 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
-import hu.speeder.huroutes.utils.DownloadNotification
+import hu.speeder.huroutes.MainActivity
+import hu.speeder.huroutes.web.downloaders.DownloadNotificationPermissionTask
 import hu.speeder.huroutes.utils.PermissionTask
 
 /**
@@ -19,20 +20,24 @@ class DownloaderPermissionTask(
     @Suppress("UNUSED_PARAMETER") mimeType: String?,
     @Suppress("UNUSED_PARAMETER") contentLength: Long): PermissionTask {
 
-    private val downloader = getDownloaderFor(Uri.parse(uri)).setContext(context)
+    private val downloader = getDownloaderFor(context, Uri.parse(uri))
 
     override val permissionsNeeded get() = downloader.permissionsNeeded
 
     override fun run() {
         try {
             val (uri, fileName) = downloader.saveTo(Environment.DIRECTORY_DOWNLOADS)
-            DownloadNotification(context)
-                .setIntentUri(uri)
-                .showText(fileName)
+            showDownloadNotification(uri, fileName)
         }
         catch (e: Exception) {
             Log.w(LOG_TAG, e.message.toString())
         }
+    }
+
+    private fun showDownloadNotification(uri: Uri, fileName: String) {
+        val notificationTask = DownloadNotificationPermissionTask(context, uri, fileName)
+        val activity = context as? MainActivity
+        activity?.runTaskWithPermission(notificationTask)
     }
 
     override fun error() {}

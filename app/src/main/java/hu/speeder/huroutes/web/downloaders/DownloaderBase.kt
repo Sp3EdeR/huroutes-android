@@ -3,13 +3,14 @@ package hu.speeder.huroutes.web.downloaders
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import java.io.OutputStream
 
 /**
  * An exception which is thrown when a file cannot be written.
  */
-class CannotWriteFileException(uri: String): Exception("Unable to write file $uri")
+class CannotWriteFileException(path: String, cause: Throwable? = null): Exception("Unable to write file $path", cause)
 
 /**
  * A downloader for the specified uri, returned by the `getDownloaderFor` factory.
@@ -65,12 +66,24 @@ abstract class DownloaderBase: Downloader {
             }
         }
         val resolver = context.applicationContext.contentResolver
-        val uri = resolver.insert(MediaStore.Files.getContentUri("external"), values)
-        uri?.also {
-            resolver.openOutputStream(it,"wt")?.also { stream ->
-                return Pair(it, stream)
+        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Downloads.EXTERNAL_CONTENT_URI
+        } else {
+            MediaStore.Files.getContentUri("external")
+        }
+        val uri = resolver.insert(collection, values)
+            ?: throw CannotWriteFileException("$directory/$fileName")
+
+        try {
+            val stream = resolver.openOutputStream(uri, "wt")
+                ?: throw CannotWriteFileException("$directory/$fileName")
+            return Pair(uri, stream)
+        } catch (exception: Exception) {
+            resolver.delete(uri, null, null)
+            when (exception) {
+                is CannotWriteFileException -> throw exception
+                else -> throw CannotWriteFileException("$directory/$fileName", exception)
             }
         }
-        throw CannotWriteFileException("$directory/$fileName")
     }
 }

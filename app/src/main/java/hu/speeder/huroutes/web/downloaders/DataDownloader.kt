@@ -2,6 +2,7 @@ package hu.speeder.huroutes.web.downloaders
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.net.Uri
+import android.os.Build
 import android.util.Base64
 import android.webkit.MimeTypeMap
 import java.net.URLDecoder
@@ -61,7 +62,8 @@ class DataDownloader(private val uri: Uri): DownloaderBase() {
     /**
      * Specifies that this downloader
      */
-    override val permissionsNeeded: Array<String> = arrayOf(WRITE_EXTERNAL_STORAGE)
+    override val permissionsNeeded: Array<String> =
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) arrayOf(WRITE_EXTERNAL_STORAGE) else emptyArray()
 
     override fun saveTo(directory: String): Pair<Uri, String> {
         val fileName = "$FILE_NAME-${dateFormatter.format(Date())}.$extension"
