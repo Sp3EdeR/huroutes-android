@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_events"
+        android:icon="@drawable/events_ico"
+        android:title="@string/tab_events" />
+    <item
+        android:id="@+id/nav_huroutes"
+        android:icon="@drawable/huroutes_ico"
+        android:title="@string/tab_huroutes" />
+    <item
+        android:id="@+id/nav_photospots"
+        android:icon="@drawable/photospots_ico"
+        android:title="@string/tab_photospots" />
+</menu>

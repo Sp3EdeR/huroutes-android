@@ -10,11 +10,11 @@ import hu.speeder.huroutes.utils.PermissionTask
 /**
  * A custom chrome client implementation for the huroutes web view.
  */
-class HuroutesWebChromeClient(val context: Context): WebChromeClient() {
+class GeolocationPermissionWebChromeClient(val context: Context): WebChromeClient() {
     /**
      * A location requesting task that signals back to the WebView about the permission result.
      */
-    class DownloaderPermissionTask(
+    class GeolocationPermissionTask(
         private val origin: String?,
         private val callback: GeolocationPermissions.Callback?
     ): PermissionTask {
@@ -36,7 +36,7 @@ class HuroutesWebChromeClient(val context: Context): WebChromeClient() {
         origin: String?,
         callback: GeolocationPermissions.Callback?,
     ) {
-        val task = DownloaderPermissionTask(origin, callback)
+        val task = GeolocationPermissionTask(origin, callback)
         (context as MainActivity).runTaskWithPermission(task)
     }
 }

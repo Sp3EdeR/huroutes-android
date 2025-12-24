@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Car Apps</string>
+    <string name="tab_events">Events</string>
+    <string name="tab_huroutes">huroutes</string>
+    <string name="tab_photospots">Photo spots</string>
     <string name="dlnoti_channel">Download notifications</string>
     <string name="dlnoti_desc">It shows information about downloaded files.</string>
     <string name="dlnoti_title">File downloaded</string>

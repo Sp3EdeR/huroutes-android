@@ -1,23 +1,30 @@
-package hu.speeder.huroutes
+package hu.speeder.huroutes.controls
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebSettings
+import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import hu.speeder.huroutes.MainActivity
 import hu.speeder.huroutes.databinding.FragmentWebviewBinding
+import hu.speeder.huroutes.web.CarappsWebView
 
 /**
  * A fragment that contains the main WebView control.
  */
-class WebViewFragment : Fragment() {
+open abstract class WebViewFragment() : Fragment() {
 
     private var _binding: FragmentWebviewBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var webView: CarappsWebView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +37,17 @@ class WebViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.webView.apply {
+        // Create and add the WebView to the fragment
+        webView = makeWebView(requireContext(), null, 0).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        }
+        binding.swipeRefresh.addView(webView)
+
+        // Apply web view integrations
+        webView.apply {
             client.setLoadedCallback {
                 binding.swipeRefresh.isRefreshing = false
                 updateOfflineMode() // Re-enable cache after a refresh
@@ -46,10 +63,10 @@ class WebViewFragment : Fragment() {
 
         binding.swipeRefresh.apply {
             setCanChildScrollUpCallback {
-                binding.webView.scrollable.y || !binding.webView.isNetworkAvailable()
+                webView.scrollable.y || !webView.isNetworkAvailable()
             }
             setOnRefreshListener {
-                binding.webView.also { vw ->
+                webView.also { vw ->
                     vw.settings.cacheMode = WebSettings.LOAD_NO_CACHE
                     vw.reload()
                     isRefreshing = true
@@ -71,19 +88,24 @@ class WebViewFragment : Fragment() {
      * The URI can be received from an intent used to launch the app.
      */
     private fun getStartUri(): Uri {
-        var uri = binding.webView.startUri
+        var uri = webView.startUri
         try {
-            val inUri = Uri.parse(requireActivity().intent!!.data!!.toString())
-            Log.d(LOG_TAG, "Received URI in intent: $inUri")
-            if (binding.webView.validateUri(inUri)) {
+            var inUri = requireActivity().intent?.data
+            if (inUri != null) {
+                Log.d(LOG_TAG, "Received URI in intent: $inUri")
+            }
+            inUri = webView.validateUri(inUri)
+            if (inUri != null) {
                 uri = inUri
-                Log.i(LOG_TAG, "Accepted URI in intent: $uri")
+                Log.i(LOG_TAG, "Accepted URI in intent: $inUri")
             }
         }
         catch (_: Exception) {
         }
         return uri
     }
+
+    protected abstract fun makeWebView(ctx: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0): CarappsWebView
 
     companion object {
         private const val LOG_TAG = "webViewFragment"

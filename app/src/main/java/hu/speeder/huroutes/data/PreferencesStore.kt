@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -22,34 +23,61 @@ private val Context.dataStore : DataStore<Preferences> by preferencesDataStore(
 )
 
 class PreferencesStore(private val context: Context) {
-    private val LANGUAGE_ISO_ALPHA_2 = stringPreferencesKey("language_iso_2")
+    companion object {
+        private val TAB_POSITION = stringPreferencesKey("tab_position")
+        private val LANGUAGE_ISO_ALPHA_2 = stringPreferencesKey("language_iso_2")
+    }
 
-    /// Returns the language synchronously
-    val languageIso2: String? get() {
-        return runBlocking {
-            context.dataStore.data
-                .catch {
-                    if (it is IOException) {
-                        it.printStackTrace()
-                        emit(emptyPreferences())
-                    } else {
-                        throw it
-                    }
+    /// Sets or returns the last tab ID synchronously
+    var lastTabPosition: Int?
+        get() {
+            return runBlocking {
+                context.dataStore.data
+                    .catch { handleIOException(it) }
+                    .map { it[TAB_POSITION]?.toIntOrNull() }
+                    .first()
+            }
+        }
+        set(tabPosition: Int?) {
+            runBlocking {
+                context.dataStore.edit { preferences ->
+                    if (tabPosition == null)
+                        preferences.remove(TAB_POSITION)
+                    else
+                        preferences[TAB_POSITION] = tabPosition.toString()
                 }
-                .map {
-                    // On the first run of the app, we will use LinearLayoutManager by default
-                    it[LANGUAGE_ISO_ALPHA_2]
+            }
+        }
+
+    /// Sets or returns the language synchronously as 2-letter ISO
+    var languageIso2: String?
+        get() {
+            return runBlocking {
+                context.dataStore.data
+                    .catch { handleIOException(it) }
+                    .map { it[LANGUAGE_ISO_ALPHA_2] }
+                    .first()
+            }
+        }
+        set(languageIso2: String?) {
+            runBlocking {
+                context.dataStore.edit { preferences ->
+                    if (languageIso2 == null)
+                        preferences.remove(LANGUAGE_ISO_ALPHA_2)
+                    else
+                        preferences[LANGUAGE_ISO_ALPHA_2] = languageIso2
                 }
-                .first()
+            }
+        }
+
+    // Handle empty preferences silently
+    private suspend fun FlowCollector<Preferences>.handleIOException(cause: Throwable) {
+        if (cause is IOException) {
+            cause.printStackTrace()
+            emit(emptyPreferences())
+        } else {
+            throw cause
         }
     }
 
-    suspend fun saveLanguageToPreferencesStore(languageIso2: String?) {
-        context.dataStore.edit { preferences ->
-            if (languageIso2 == null)
-                preferences.remove(LANGUAGE_ISO_ALPHA_2)
-            else
-                preferences[LANGUAGE_ISO_ALPHA_2] = languageIso2
-        }
-    }
 }

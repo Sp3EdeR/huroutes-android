@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Autós Appok</string>
+    <string name="tab_events">Események</string>
+    <string name="tab_huroutes">huroutes</string>
+    <string name="tab_photospots">Fotópontok</string>
     <string name="dlnoti_channel">Letöltések értesítései</string>
     <string name="dlnoti_desc">A letöltött fileokról jelenít meg információt.</string>
     <string name="dlnoti_title">File letöltve</string>
