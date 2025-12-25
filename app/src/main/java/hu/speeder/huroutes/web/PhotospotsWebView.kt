@@ -26,6 +26,7 @@ class PhotospotsWebView @JvmOverloads constructor(
     override val client get() = _client
 
     init {
+        webChromeClient = GeolocationPermissionWebChromeClient(context)
         webViewClient = _client
         _client.setHandleUriCallback { uri -> handleUri(uri) }
     }
