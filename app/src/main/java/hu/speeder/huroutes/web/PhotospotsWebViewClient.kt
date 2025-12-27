@@ -12,13 +12,20 @@ class PhotospotsWebViewClient: CarappsWebViewClient() {
     ) {
         super.onPageStarted(view, url, favicon)
 
-        // CSS to hide the top bar and work around the clickability of the position marker
         val css = """
+            /* Hides the top bar */
             #map-canvas > div:has(div[data-tooltip*="Autós"]) {
                 display: none !important;
             }
+            /* Clickthrough position marker workaround */
             div[title='Current location'] {
                 pointer-events: none;
+            }
+            /* Dark mode map*/
+            @media (prefers-color-scheme: dark) {
+              div[style*="cursor"] > div[style*="z-index: 1"] > div[style*="z-index: 0"] {
+                filter: brightness(0.7) invert(1) contrast(2.5) hue-rotate(234deg) saturate(0.2) brightness(0.8);
+              }
             }
         """.trimIndent()
         val escapedCss = JSONObject.quote(css)
